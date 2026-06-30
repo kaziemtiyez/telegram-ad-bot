@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Watch Ad</title>
+    <title>Watch Ad to Earn</title>
+    <!-- Adsgram Official SDK -->
     <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
     <style>
         body {
@@ -16,30 +17,40 @@
             margin: 0;
             font-family: Arial, sans-serif;
         }
-        .loading {
+        .container {
             text-align: center;
-            font-size: 18px;
+            padding: 20px;
+        }
+        .loader {
+            font-size: 20px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="loading">🔄 Loading Reward Video Ad...</div>
+    <div class="container">
+        <div class="loader">🔄 Loading Video Ad...</div>
+        <div style="font-size: 14px; color: #aaaaaa;">Please wait a moment</div>
+    </div>
 
     <script>
-        // Get Block ID from URL Parameters
+        // Parse Block ID from URL Parameters
         const urlParams = new URLSearchParams(window.location.search);
-        const blockId = urlParams.get('blockId') || 'bot-36654';
+        let parsedBlockId = urlParams.get('blockId') || '36654';
+        
+        // Ensure the Block ID is strictly handled as a String to prevent Adsgram errors
+        const blockIdStr = String(parsedBlockId).trim();
 
-        // Initialize Adsgram
-        const AdController = window.Adsgram.init({ blockId: blockId });
+        // Initialize Adsgram Controller
+        const AdController = window.Adsgram.init({ blockId: blockIdStr });
 
-        // Show Ad automatically when page opens
+        // Auto-play Ad immediately upon loading
         AdController.show().then((result) => {
-            // User watched the ad till the end
-            alert("🎯 Thank you! Ad completed. You can close this window now.");
+            alert("🎯 Ad completed successfully! Your reward has been processed.");
+            window.location.reload();
         }).catch((result) => {
-            // Ad skipped or error occurred
-            alert("⚠️ Ad skipped or not available. Please try again.");
+            alert("⚠️ Ad skipped or no ads available at this moment. Please try again.");
+            console.log("Adsgram Error Status:", result);
         });
     </script>
 </body>
