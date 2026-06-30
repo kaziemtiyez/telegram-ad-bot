@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch Ad</title>
+    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .loading {
+            text-align: center;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading">🔄 Loading Reward Video Ad...</div>
+
+    <script>
+        // Get Block ID from URL Parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const blockId = urlParams.get('blockId') || 'bot-36654';
+
+        // Initialize Adsgram
+        const AdController = window.Adsgram.init({ blockId: blockId });
+
+        // Show Ad automatically when page opens
+        AdController.show().then((result) => {
+            // User watched the ad till the end
+            alert("🎯 Thank you! Ad completed. You can close this window now.");
+        }).catch((result) => {
+            // Ad skipped or error occurred
+            alert("⚠️ Ad skipped or not available. Please try again.");
+        });
+    </script>
+</body>
+</html>
