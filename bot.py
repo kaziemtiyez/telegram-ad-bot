@@ -1,6 +1,6 @@
 import os
 import telebot
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 import requests
 
 # Fetching tokens from environment variables
@@ -25,11 +25,23 @@ def send_welcome(message):
         "Click the buttons below to check your balance, view prices, or earn reward points."
     )
     
-    # Inline buttons layout
+    # Adsgram WebApp direct ad window link
+    ad_webapp_url = f"https://render.adsgram.ai/v2?blockId={ADSGRAM_BLOCK_ID}&tg_user_id={user_id}"
+    
+    # Inline buttons layout - Grid Style (2x2 layout)
     markup = InlineKeyboardMarkup()
-    markup.row(InlineKeyboardButton("💰 My Balance", callback_data="check_balance"))
-    markup.row(InlineKeyboardButton("📉 Check Crypto Prices", callback_data="show_prices"))
-    markup.row(InlineKeyboardButton("💵 Withdraw Money", callback_data="withdraw"))
+    
+    # First Row: Crypto Prices (Left) | Watch Ad (Right)
+    markup.row(
+        InlineKeyboardButton("📉 Check Crypto Prices", callback_data="show_prices"),
+        InlineKeyboardButton("🎬 Watch Ad & Earn", web_app=WebAppInfo(url=ad_webapp_url))
+    )
+    
+    # Second Row: My Balance (Left) | Withdraw Money (Right)
+    markup.row(
+        InlineKeyboardButton("💰 My Balance", callback_data="check_balance"),
+        InlineKeyboardButton("💵 Withdraw Money", callback_data="withdraw")
+    )
     
     bot.send_message(message.chat.id, welcome_text, reply_markup=markup)
 
@@ -48,10 +60,9 @@ def callback_listener(call):
         bot.answer_callback_query(call.id)
         
         ad_markup = InlineKeyboardMarkup()
-        # Creating Adsgram direct ad redirect link
-        ad_url = f"https://sad.adsgram.ai/redirect?bg={ADSGRAM_BLOCK_ID}&user={user_id}"
+        ad_webapp_url = f"https://render.adsgram.ai/v2?blockId={ADSGRAM_BLOCK_ID}&tg_user_id={user_id}"
         
-        ad_markup.row(InlineKeyboardButton("🎬 Watch Ad (15s)", url=ad_url))
+        ad_markup.row(InlineKeyboardButton("🎬 Watch Ad (15s)", web_app=WebAppInfo(url=ad_webapp_url)))
         ad_markup.row(InlineKeyboardButton("✅ Done? View Prices Now", callback_data="fetch_real_price"))
         
         bot.send_message(chat_id, "⚠️ Please watch the 15-second video ad below to unlock live prices:", reply_markup=ad_markup)
